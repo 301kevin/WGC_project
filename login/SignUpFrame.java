@@ -137,10 +137,9 @@ public class SignUpFrame extends JFrame implements ActionListener {
 		int result = dao.newMember(dto);
 		dispose();
 		if (result > 0)
-			return "회원이 가입되었습니다.";
+			return dto.getName() + "님의 가입을 환영합니다.";
 		else
 			return "저장 실패";
-
 	}
 
 }

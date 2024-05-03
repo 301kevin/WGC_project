@@ -25,7 +25,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class ReservationFrame extends JFrame implements ActionListener {
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JFrame;
+
+public class Reservation_Seat extends JFrame implements ActionListener {
 	ReservationDAO dao = new ReservationDAO();
 
 	// 화면 열고 닫는거 설정
@@ -144,9 +150,10 @@ public class ReservationFrame extends JFrame implements ActionListener {
 	JLabel l_infor_select = new JLabel(ima_next);
 	JButton b_infor_selectend = new JButton(ima_nextend);
 
-	public ReservationFrame() {
+	public Reservation_Seat() {
+
 		setSize(1500, 1000);
-		setTitle("WGV 예매");
+		setTitle("WGV 좌석 선택");
 
 		init();
 		start();
@@ -419,8 +426,6 @@ public class ReservationFrame extends JFrame implements ActionListener {
 				break;
 			}
 		}
-		SeatDAO seatdao = new SeatDAO();
-		/// seatda
 
 		if (e.getSource() == b_infor_selectend) {
 			// 좌석 선택 부분

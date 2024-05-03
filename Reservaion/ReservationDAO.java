@@ -24,8 +24,6 @@ public class ReservationDAO {
 		}
 	}
 
-
-
 	// 2. 로그인
 	public Connection getConnection() {
 		Connection conn = null;
@@ -96,9 +94,7 @@ public class ReservationDAO {
 
 			while (rs.next()) {
 				String name = rs.getString("name");
-
 				list.addElement(name);
-
 			}
 
 		} catch (SQLException e) {
@@ -136,7 +132,6 @@ public class ReservationDAO {
 
 			while (rs.next()) {
 				imagename = rs.getString("image");
-
 			}
 
 		} catch (SQLException e) {
@@ -158,6 +153,4 @@ public class ReservationDAO {
 		return imagename;
 	}
 
-
-		
 }

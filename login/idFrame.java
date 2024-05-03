@@ -26,7 +26,7 @@ import javax.swing.JTextField;
 public class idFrame extends JFrame implements ActionListener {
 
 	Container container = getContentPane();
-
+	
 	JTextField usernameField = new JTextField(20);
 	JPasswordField passwordField = new JPasswordField(20);
 
@@ -79,7 +79,7 @@ public class idFrame extends JFrame implements ActionListener {
 		labelPanel.setBackground(Color.gray);
 		textPanel.setBackground(Color.gray);
 
-		JLabel titleLabel = new JLabel("환영합니다", JLabel.CENTER);
+		JLabel titleLabel = new JLabel("환영합니다!", JLabel.CENTER);
 		titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 		panel.add(titleLabel, BorderLayout.NORTH);
 
@@ -166,7 +166,7 @@ public class idFrame extends JFrame implements ActionListener {
 				passwordField.setText("");
 			}
 
-//			new -Frame// 로그인 후 메인
+//			new mainFrame// 로그인 후 메인
 		} else if (e.getSource() == findIDButton) {
 //			dispose(); // 로그인 창 닫기
 			new FindIDFrame(); // 아이디 찾는 창 열기
@@ -180,11 +180,5 @@ public class idFrame extends JFrame implements ActionListener {
 
 	}
 
-//	 SwingUtilities.invokeLater(() -> {
-//         JFrame frame = new JFrame("새 프레임");
-//         frame.setSize(300, 200);
-//         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//         frame.setVisible(true);
-//     });
 
 }

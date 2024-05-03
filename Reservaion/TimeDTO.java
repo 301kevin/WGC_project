@@ -14,6 +14,13 @@ public class TimeDTO {
 	public TimeDTO() {
 
 	}
+	
+	public TimeDTO( String time) {
+		super();
+
+		this.time = time;
+	}
+	
 	public TimeDTO( String time, int count) {
 		super();
 

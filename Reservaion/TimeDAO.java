@@ -81,10 +81,10 @@ public class TimeDAO {
 	
 	
 	// 시간순 나열
-	public List<TimeDTO> timeasc(int num) {
-		List<TimeDTO> list = new ArrayList<TimeDTO>();
+	public String[] timeasc(int num) {
+		List<String> list = new ArrayList<String>();
 
-		String sql = "select * from room where ? order by roomnum,num asc";
+		String sql = "select * from room where roomnum = ? order by roomnum,num asc";
 
 		Connection conn = getConnection();
 		PreparedStatement pstmt = null;
@@ -96,13 +96,86 @@ public class TimeDAO {
 			rs = pstmt.executeQuery();
 			while(rs.next()){
 
+				String time = rs.getString("time")+"   ";
+				String time1  = rs.getString("count")+"석";
+				list.add(time+"\n"+time1);
+
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return list.toArray(new String[0]);
+	}
+	
+	// 좌석 수만 나열 
+		public String[] asc(int num) {
+			List<String> list = new ArrayList<String>();
+
+			String sql = "select * from room where roomnum = ? order by roomnum,num asc";
+
+			Connection conn = getConnection();
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, num);
+				rs = pstmt.executeQuery();
+				while(rs.next()){
+
+					String time1  = rs.getString("count")+"석";
+					list.add(time1);
+
+				}
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (rs != null)
+						rs.close();
+					if (pstmt != null)
+						pstmt.close();
+					if (conn != null)
+						conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			return list.toArray(new String[0]);
+		}
+		
+	
+	// 1관,2관,3관만 뽑아내기 SELECT DISTINCT room FROM room;
+	public List<String> distroom() {
+		List<String> list = new ArrayList<String>();
+
+		String sql = "SELECT DISTINCT room FROM room";
+
+		Connection conn = getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+
 				String room = rs.getString("room");
-				String time = rs.getString("time");
-				int number = rs.getInt("number");
 
-				TimeDTO dto = new TimeDTO(room,time,number);
-				list.add(dto);
-
+				list.add(room);
 			}
 			
 		} catch (SQLException e) {
