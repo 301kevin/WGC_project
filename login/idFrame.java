@@ -26,7 +26,7 @@ import javax.swing.JTextField;
 public class idFrame extends JFrame implements ActionListener {
 
 	Container container = getContentPane();
-	
+
 	JTextField usernameField = new JTextField(20);
 	JPasswordField passwordField = new JPasswordField(20);
 
@@ -42,7 +42,7 @@ public class idFrame extends JFrame implements ActionListener {
 	JPanel inputPanel = new JPanel();
 	JPanel buttonPanel = new JPanel();
 	JPanel AllbuttonPanel = new JPanel();
-	
+
 	JLabel usernameLabel = new JLabel("ID              ");
 	JLabel passwordLabel = new JLabel("PASSWORD");
 
@@ -69,7 +69,7 @@ public class idFrame extends JFrame implements ActionListener {
 //		buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // 보더 설정
 //		loginPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // 보더 설정
 		container.setBackground(Color.darkGray);
-		
+
 		container.add("North", panel);
 		container.add("Center", inputPanel);
 		container.add("South", AllbuttonPanel);
@@ -101,15 +101,15 @@ public class idFrame extends JFrame implements ActionListener {
 		passwordField.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 		passwordField.setPreferredSize(new Dimension(200, 40));
 
-		inputPanel.setLayout(new GridLayout(5,0));
+		inputPanel.setLayout(new GridLayout(5, 0));
 		inputPanel.add(labelPanel);
 		inputPanel.add(textPanel);
 
-		labelPanel.add("West",usernameLabel);
-		textPanel.add("West",passwordLabel);
-		
-		labelPanel.add("East",usernameField);
-		textPanel.add("East",passwordField);
+		labelPanel.add("West", usernameLabel);
+		textPanel.add("West", passwordLabel);
+
+		labelPanel.add("East", usernameField);
+		textPanel.add("East", passwordField);
 
 		AllbuttonPanel.setLayout(new BorderLayout());
 		AllbuttonPanel.add("Center", buttonPanel);
@@ -121,7 +121,7 @@ public class idFrame extends JFrame implements ActionListener {
 		buttonPanel.add(findPasswordButton);
 		buttonPanel.add(signUpButton);
 		buttonPanel.add(deleteButton);
-		
+
 		usernameLabel.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 		passwordLabel.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 
@@ -139,6 +139,8 @@ public class idFrame extends JFrame implements ActionListener {
 		findIDButton.addActionListener(this);
 		findPasswordButton.addActionListener(this);
 		deleteButton.addActionListener(this);
+		usernameField.addActionListener(this);
+		passwordField.addActionListener(this);
 	}
 
 	@Override
@@ -146,9 +148,10 @@ public class idFrame extends JFrame implements ActionListener {
 		if (e.getSource() == signUpButton) {
 //			dispose(); // 로그인 창 닫기
 			new SignUpFrame(); // 회원가입 창 열기
-		} else if (e.getSource() == loginButton) {
+		} else if (e.getSource() == loginButton || e.getSource() == usernameField || e.getSource() == passwordField) { // 로그인
 			String username = usernameField.getText();
 			String password = new String(passwordField.getPassword());
+			
 			if (username.isEmpty()) {
 				JOptionPane.showMessageDialog(this, "아이디를 입력하세요.");
 				return;
@@ -156,6 +159,7 @@ public class idFrame extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "비밀번호를 입력하세요.");
 				return;
 			}
+			
 			boolean result = dao.login(username, password);
 			if (result == true) {
 				JOptionPane.showMessageDialog(this, "로그인 되었습니다.");
@@ -179,6 +183,5 @@ public class idFrame extends JFrame implements ActionListener {
 		}
 
 	}
-
 
 }

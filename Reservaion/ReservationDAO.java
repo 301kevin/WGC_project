@@ -79,9 +79,9 @@ public class ReservationDAO {
 		return list;
 	}
 
-	// 인기순 나열 = 영화 이름만
+	// 좌석 수만 출력 
 	public DefaultListModel<String> namedesc() {
-		String sql = "select * from movie order by name asc";
+		String sql = "select * from room order by roomnum,num asc";
 		DefaultListModel<String> list = new DefaultListModel<String>();
 
 		Connection conn = getConnection();

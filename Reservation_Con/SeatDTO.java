@@ -1,4 +1,4 @@
-package Reservaion;
+package Reservation_Con;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
