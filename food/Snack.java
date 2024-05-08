@@ -3,11 +3,18 @@ package food;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,23 +23,88 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+
+import MainPage.MainPageFrame;
+import Movie.Movie;
+import Reservaion.ReservationFrame;
+import Reservation_Con.Reservaion_Con;
+import login.idFrame;
 
 public class Snack extends JFrame implements ActionListener {
 	Container container = getContentPane();
 	String[] strs = { "1", "2", "3", "4", "5" };
 	JComboBox<String> comboBox = new JComboBox<String>(strs);
+
+	// 메인 센터 패널
+	JPanel p_main = new JPanel();
+	// 1. 큰 틀
+	JPanel p_north = new JPanel();
+	JPanel p_west = new JPanel();
+	JPanel p_center = new JPanel();
+	JPanel p_east = new JPanel();
+	JPanel p_south = new JPanel();
+
+	// --------------2. 북쪽----------------//
+	JPanel p_NWGV = new JPanel(); // WGV 마크 & 로그인 & 회원가입 & 예약 확인 버튼
+	JPanel p_NTab = new JPanel(); // 영화, 예매, 음식 버튼 -> 클릭하면 넘어감
+	JPanel p_NBlink = new JPanel(); // 빈칸
+
+	// 2-1-1. 북쪽 WGV 마크 + 광고
+	JLabel l_Nblink = new JLabel(); // 빈칸
+	ImageIcon WGV = new ImageIcon("image/WGV.png"); // WGV 마크
+	JButton b_WGV = new JButton(WGV);
+	ImageIcon N_adr = new ImageIcon("image/adv.png"); // 광고
+	JLabel l_N_adr = new JLabel(N_adr);
+	JPanel p_login = new JPanel(); // 로그인 버튼 묶음
+	ImageIcon line1 = new ImageIcon("image/선1.png"); // 그레이선
+	JLabel l_line1 = new JLabel(line1);
+
+	// 2-1-2. 북쪽 로그인 버튼들
+	/** 수정 */
+	ImageIcon logout = new ImageIcon("image/로그아웃.png");
+	JButton b_logout = new JButton(logout); // 로그인 버튼
+	ImageIcon logblink = new ImageIcon("image/빈칸.png");
+	JButton b_logblink = new JButton(logblink); // 로그인 버튼
+	ImageIcon mywgv = new ImageIcon("image/MY WGV.png");
+	JButton b_mywgv = new JButton(mywgv); // my WGV 버튼
+	ImageIcon custom = new ImageIcon("image/고객센터.png");
+	JButton b_custom = new JButton(custom); // 고객센터 버튼
+
+	// 2-2. 북쪽 탭 버튼들
+	JLabel l_tabblink = new JLabel(); // 빈칸
+	ImageIcon tabmoive = new ImageIcon("image/탭영화.png");
+	JButton b_tabmoive = new JButton(tabmoive); // 영화 탭
+	ImageIcon tabmoiveRe = new ImageIcon("image/탭예매.png");
+	JButton b_tabmoiveRe = new JButton(tabmoiveRe); // 예약 탭
+	ImageIcon tabFood = new ImageIcon("image/탭음식.png");
+	JButton b_tabFood = new JButton(tabFood); // 음식 탭
+
+	// 2-3. 빈화면
+	ImageIcon line2 = new ImageIcon("image/선2.png"); // 그레이선
+	JLabel l_line2 = new JLabel(line2);
+	JLabel l_blink = new JLabel();
+
+	// --------------3. 서쪽----------------//
+	ImageIcon WE_adr = new ImageIcon("image/adv1.png");
+	JLabel l_W_adr = new JLabel(WE_adr);
+
+	// --------------4. 동쪽----------------//
+	JLabel l_E_adr = new JLabel(WE_adr);
+
+	// --------------5. 가운데 ----------------// => * 추가
+
 	// 아이콘 이미지 변경
 	ImageIcon foodIcon = new ImageIcon("foodimg/food.png");
 	// 시작 패널
 	JPanel panel_main = new JPanel();
-
 	// 스토어 상품 패널
 	JPanel panel_main_north = new JPanel();
 	// store 라벨
 	JLabel label_store = new JLabel("메뉴");
 	// 상품고르세요 라벨
 	JLabel label_price = new JLabel("원하시는 상품을 골라주세요.");
-
 	// 탭 항목 들
 	JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 	JPanel panel_combo = new JPanel();
@@ -70,7 +142,7 @@ public class Snack extends JFrame implements ActionListener {
 	JPanel panel_cm44 = new JPanel();
 	JPanel panel_cm444 = new JPanel();
 	JButton button_cm4 = new JButton(new ImageIcon("foodimg/combo4.png"));
-	JLabel label_cm4 = new JLabel("CGV 콤보");
+	JLabel label_cm4 = new JLabel("★BEST MENU★ CGV 콤보");
 	JLabel label_cm44 = new JLabel("팝콘(L)1+탄산음료(M)2");
 	JLabel label_cm444 = new JLabel("10,000원");
 	// 우리패키지
@@ -116,14 +188,14 @@ public class Snack extends JFrame implements ActionListener {
 	JPanel panel_pc44 = new JPanel();
 	JPanel panel_pc444 = new JPanel();
 	JButton button_pc4 = new JButton(new ImageIcon("foodimg/popcorn4.png"));
-	JLabel label_pc4 = new JLabel("더블치즈팝콘(L)");
+	JLabel label_pc4 = new JLabel("★BEST MENU★ 더블치즈팝콘(L)");
 	JLabel label_pc44 = new JLabel("6,500원");
 	// 바질어니언팝콘L
 	JPanel panel_pc5 = new JPanel();
 	JPanel panel_pc55 = new JPanel();
 	JPanel panel_pc555 = new JPanel();
 	JButton button_pc5 = new JButton(new ImageIcon("foodimg/popcorn5.png"));
-	JLabel label_pc5 = new JLabel("바질어니언팝콘(L)");
+	JLabel label_pc5 = new JLabel("★BEST MENU★ 바질어니언팝콘(L)");
 	JLabel label_pc55 = new JLabel("6,500원");
 	// 달콤팝콘L
 	JPanel panel_pc6 = new JPanel();
@@ -208,6 +280,8 @@ public class Snack extends JFrame implements ActionListener {
 	// 단순 하단 색상 넣기용
 	JPanel panel_south = new JPanel();
 	JLabel Label_south = new JLabel("WGV 영화관을 이용해주셔서 감사합니다.");
+	JButton button_pay = new JButton("결제를 해주세요");
+
 	// 라벨 변경
 	// 스낵 부분 비활성화 버튼
 	JButton button23 = new JButton("준비중입니다.");
@@ -226,19 +300,133 @@ public class Snack extends JFrame implements ActionListener {
 
 	private void init() {
 		container.setLayout(new BorderLayout());
-		container.add("North", panel_main_north);
-		container.add("Center", tabbedPane);
-		container.add("South", panel_south);
+		container.add("North", p_north);
+		container.add("Center", panel_main);
+		container.add("South", p_south);
+		container.add("East", p_east);
+		container.add("West", p_west);
+
+		// 메인 레이아웃
+		panel_main.setLayout(new BorderLayout());
+		panel_main.add("North", panel_main_north);
+		panel_main.add("Center", tabbedPane);
+		panel_main.add("South", panel_south);
+
+		// 0-1) 동서남북 가운데 사이즈 정해주기
+		p_north.setPreferredSize(new Dimension(1500, 235));
+		p_center.setPreferredSize(new Dimension(1130, 765)); // * 추가 : 넣는 곳 => 가운데 사이즈
+		p_west.setPreferredSize(new Dimension(185, 1000));
+		p_east.setPreferredSize(new Dimension(185, 1000));
+		// 1. 북쪽 패널 설정
+		p_north.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+
+		p_north.add(p_NWGV);
+		p_north.add(p_NTab);
+		p_north.add(p_NBlink);
+
+		// --------------북쪽----------------//
+		// * 1) 북쪽 . 패널 사이즈 설정
+		p_NWGV.setPreferredSize(new Dimension(1500, 105)); // WGV 마크 쪽 사이즈
+		p_NTab.setPreferredSize(new Dimension(1500, 50)); // 탭 쪽 사이즈
+		p_NBlink.setPreferredSize(new Dimension(1500, 80)); // 빈칸 사이즈
+
+		// 1-1. 북쪽 wgv 마크 & 버튼 설정
+		p_NWGV.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		p_NWGV.add(l_Nblink); // WGV 마크
+		p_NWGV.add(b_WGV); // WGV 마크
+		p_NWGV.add(l_N_adr);// 광고
+		p_NWGV.add(p_login);// 로그인 버튼 묶음
+		p_NWGV.add(l_line1);// 로그인 버튼 묶음
+
+		// * 1-1) 북쪽 wgv 마크 & 버튼 설정 사이즈 설정
+		l_Nblink.setPreferredSize(new Dimension(185, 104));
+		b_WGV.setPreferredSize(new Dimension(525, 104));
+		l_N_adr.setPreferredSize(new Dimension(210, 104));
+		p_login.setPreferredSize(new Dimension(580, 104));
+		l_line1.setPreferredSize(new Dimension(1500, 1)); // 선1 추가
+
+		p_NWGV.setBackground(Color.white);
+		b_WGV.setBackground(Color.white);
+		p_NWGV.paintComponents(getGraphics());
+		b_WGV.setBorder(new EmptyBorder(0, 0, 0, 0));
+		b_WGV.setBackground(Color.white);
+
+		// 1-1-1. 북쪽 WGV 마크 맨 오른쪽 로그인 버튼들
+		p_login.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+
+		p_login.add(b_logblink);
+		p_login.add(b_logout);
+		p_login.add(b_mywgv);
+		p_login.add(b_custom);
+
+		p_login.setBackground(Color.white);
+
+		// * 1-1-1.)북쪽 WGV 마크 맨 오른쪽 로그인 버튼들 사이즈 설정
+		b_logblink.setPreferredSize(new Dimension(100, 105));
+		b_logout.setPreferredSize(new Dimension(100, 105));
+		b_mywgv.setPreferredSize(new Dimension(100, 105));
+		b_custom.setPreferredSize(new Dimension(100, 105));
+
+		// * 버튼 테투리선 제거
+		b_logblink.setBorder(new EmptyBorder(0, 0, 0, 0));
+		b_logout.setBorder(new EmptyBorder(0, 0, 0, 0));
+		b_mywgv.setBorder(new EmptyBorder(0, 0, 0, 0));
+		b_custom.setBorder(new EmptyBorder(0, 0, 0, 0));
+
+		// 1-2. 북쪽 탭 설정
+		p_NTab.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		p_NTab.add(l_tabblink);
+		p_NTab.add(b_tabmoive);
+		p_NTab.add(b_tabmoiveRe);
+		p_NTab.add(b_tabFood);
+
+		// * 1-2) 탭 배경 색
+		p_NTab.setBackground(Color.white);
+
+		// * 1-2.)북쪽 탭 설정 버튼들 사이즈 설정
+		l_tabblink.setPreferredSize(new Dimension(185, 50));
+		b_tabmoive.setPreferredSize(new Dimension(180, 50));
+		b_tabmoiveRe.setPreferredSize(new Dimension(180, 50));
+		b_tabFood.setPreferredSize(new Dimension(180, 50));
+
+		// * 버튼 테투리선 제거
+		b_tabmoive.setBorder(new EmptyBorder(0, 0, 0, 0));
+		b_tabmoiveRe.setBorder(new EmptyBorder(0, 0, 0, 0));
+		b_tabFood.setBorder(new EmptyBorder(0, 0, 0, 0));
+
+		// * 1-3.) 북쪽 블링크 생성
+		p_NBlink.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		p_NBlink.add(l_line2);
+		p_NBlink.add(l_blink);
+
+		l_line2.setPreferredSize(new Dimension(1500, 3));
+		l_blink.setPreferredSize(new Dimension(1500, 77));
+
+		p_NBlink.setBackground(Color.white);
+
+		// --------------서쪽----------------//
+		// 2. 서쪽 광고 삽입
+		p_west.setLayout(new GridLayout(2, 1, 5, 5));
+		p_west.add(l_W_adr);
+
+		p_west.setBackground(Color.white);
+
+		// --------------동쪽----------------//
+		// 3. 동쪽 광고 삽입
+		p_east.setLayout(new GridLayout(2, 1, 0, 0));
+		p_east.add(l_E_adr);
+
+		p_east.setBackground(Color.white);
 
 		// 상단 스토어,상품선택
 		panel_main_north.setBackground(new Color(220, 70, 30));
 		panel_main_north.setLayout(new GridLayout(1, 1));
-		panel_main_north.add("West", label_store);
-		panel_main_north.add("Center", label_price);
+		panel_main_north.add(label_store);
+		panel_main_north.add(label_price);
 
 		// 스토어, 상품 글자 크기 조절
-		label_store.setFont(new Font("맑은고딕", Font.BOLD, 50));
-		label_price.setFont(new Font("맑은고딕", Font.BOLD, 50));
+		label_store.setFont(new Font("맑은고딕", Font.BOLD, 30));
+		label_price.setFont(new Font("맑은고딕", Font.BOLD, 30));
 		// 탭 항목
 		tabbedPane.setFont(new Font("맑은고딕", Font.BOLD, 50));
 
@@ -247,109 +435,112 @@ public class Snack extends JFrame implements ActionListener {
 		label_cm1.setHorizontalAlignment(JLabel.CENTER);
 		label_cm11.setHorizontalAlignment(JLabel.CENTER);
 		label_cm111.setHorizontalAlignment(JLabel.CENTER);
-		label_cm1.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_cm11.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_cm111.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_cm1.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_cm11.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_cm111.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_cm2.setHorizontalAlignment(JLabel.CENTER);
 		label_cm22.setHorizontalAlignment(JLabel.CENTER);
 		label_cm222.setHorizontalAlignment(JLabel.CENTER);
-		label_cm2.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_cm22.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_cm222.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_cm2.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_cm22.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_cm222.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_cm3.setHorizontalAlignment(JLabel.CENTER);
 		label_cm33.setHorizontalAlignment(JLabel.CENTER);
 		label_cm333.setHorizontalAlignment(JLabel.CENTER);
-		label_cm3.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_cm33.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_cm333.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_cm3.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_cm33.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_cm333.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_cm4.setHorizontalAlignment(JLabel.CENTER);
+		label_cm4.setForeground(Color.RED);
 		label_cm44.setHorizontalAlignment(JLabel.CENTER);
 		label_cm444.setHorizontalAlignment(JLabel.CENTER);
-		label_cm4.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_cm44.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_cm444.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_cm4.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_cm44.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_cm444.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_cm5.setHorizontalAlignment(JLabel.CENTER);
 		label_cm55.setHorizontalAlignment(JLabel.CENTER);
 		label_cm555.setHorizontalAlignment(JLabel.CENTER);
-		label_cm5.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_cm55.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_cm555.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_cm5.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_cm55.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_cm555.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_cm6.setHorizontalAlignment(JLabel.CENTER);
 		label_cm66.setHorizontalAlignment(JLabel.CENTER);
 		label_cm666.setHorizontalAlignment(JLabel.CENTER);
-		label_cm6.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_cm66.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_cm666.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_cm6.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_cm66.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_cm666.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		// 라벨 글자크기 + 가운데 정렬
 		// 팝콘
 		label_pc1.setHorizontalAlignment(JLabel.CENTER);
 		label_pc11.setHorizontalAlignment(JLabel.CENTER);
-		label_pc1.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_pc11.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_pc1.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_pc11.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_pc2.setHorizontalAlignment(JLabel.CENTER);
 		label_pc22.setHorizontalAlignment(JLabel.CENTER);
-		label_pc2.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_pc22.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_pc2.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_pc22.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_pc3.setHorizontalAlignment(JLabel.CENTER);
 		label_pc33.setHorizontalAlignment(JLabel.CENTER);
-		label_pc3.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_pc33.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_pc3.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_pc33.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_pc4.setHorizontalAlignment(JLabel.CENTER);
+		label_pc4.setForeground(Color.RED);
 		label_pc44.setHorizontalAlignment(JLabel.CENTER);
-		label_pc4.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_pc44.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_pc4.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_pc44.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_pc5.setHorizontalAlignment(JLabel.CENTER);
+		label_pc5.setForeground(Color.RED);
 		label_pc55.setHorizontalAlignment(JLabel.CENTER);
-		label_pc5.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_pc55.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_pc5.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_pc55.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_pc6.setHorizontalAlignment(JLabel.CENTER);
 		label_pc66.setHorizontalAlignment(JLabel.CENTER);
-		label_pc6.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_pc66.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_pc6.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_pc66.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		// 라벨 글자크기 + 가운데 정렬
 		// 음료
 		label_dk1.setHorizontalAlignment(JLabel.CENTER);
 		label_dk11.setHorizontalAlignment(JLabel.CENTER);
-		label_dk1.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_dk11.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_dk1.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_dk11.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_dk2.setHorizontalAlignment(JLabel.CENTER);
 		label_dk22.setHorizontalAlignment(JLabel.CENTER);
-		label_dk2.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_dk22.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_dk2.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_dk22.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_dk3.setHorizontalAlignment(JLabel.CENTER);
 		label_dk33.setHorizontalAlignment(JLabel.CENTER);
-		label_dk3.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_dk33.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_dk3.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_dk33.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_dk4.setHorizontalAlignment(JLabel.CENTER);
 		label_dk44.setHorizontalAlignment(JLabel.CENTER);
-		label_dk4.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_dk44.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_dk4.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_dk44.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_dk5.setHorizontalAlignment(JLabel.CENTER);
 		label_dk55.setHorizontalAlignment(JLabel.CENTER);
-		label_dk5.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_dk55.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_dk5.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_dk55.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_dk6.setHorizontalAlignment(JLabel.CENTER);
 		label_dk66.setHorizontalAlignment(JLabel.CENTER);
-		label_dk6.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_dk66.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_dk6.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_dk66.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		// 라벨 글자크기 + 가운데 정렬
 		// 스낵
 		label_sn1.setHorizontalAlignment(JLabel.CENTER);
 		label_sn11.setHorizontalAlignment(JLabel.CENTER);
-		label_sn1.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_sn11.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_sn1.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_sn11.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_sn2.setHorizontalAlignment(JLabel.CENTER);
 		label_sn22.setHorizontalAlignment(JLabel.CENTER);
-		label_sn2.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_sn22.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_sn2.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_sn22.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_sn3.setHorizontalAlignment(JLabel.CENTER);
 		label_sn33.setHorizontalAlignment(JLabel.CENTER);
-		label_sn3.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_sn33.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_sn3.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_sn33.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		label_sn4.setHorizontalAlignment(JLabel.CENTER);
 		label_sn44.setHorizontalAlignment(JLabel.CENTER);
-		label_sn4.setFont(new Font("맑은고딕", Font.BOLD, 25));
-		label_sn44.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		label_sn4.setFont(new Font("맑은고딕", Font.BOLD, 17));
+		label_sn44.setFont(new Font("맑은고딕", Font.BOLD, 17));
 		// panel 화면구성
 		// 콤보
 		tabbedPane.add("콤보", panel_combo);
@@ -533,6 +724,7 @@ public class Snack extends JFrame implements ActionListener {
 		// panel 화면구성
 		// 스낵
 		tabbedPane.add("스낵", panel_snack);
+		tabbedPane.setFont(new Font("맑은고딕", Font.BOLD, 23));
 		panel_snack.setLayout(new GridLayout(2, 3));
 		panel_snack.add(panel_sn1);
 		panel_sn1.setLayout(new BorderLayout());
@@ -605,12 +797,17 @@ public class Snack extends JFrame implements ActionListener {
 		button24.setFont(new Font("맑은고딕", Font.BOLD, 35));
 		button24.setEnabled(false);
 
-		// 단순 하단 색깔 넣기용
+		// 단순 하단 색깔 넣기용+ 결제 버튼
 		panel_south.setBackground(new Color(220, 70, 30));
 		panel_south.setLayout(new BorderLayout());
-		panel_south.add(Label_south);
+		panel_south.add("Center", Label_south);
+		panel_south.add("East", button_pay);
+		button_pay.setEnabled(false);
 		Label_south.setHorizontalAlignment(JLabel.CENTER);
-		Label_south.setFont(new Font("맑은고딕", Font.BOLD, 40));
+		Label_south.setFont(new Font("맑은고딕", Font.BOLD, 25));
+		// 버튼 색상 변경
+		button_pay.setBackground(Color.BLACK);
+		button_pay.setFont(new Font("맑은고딕", Font.BOLD, 25));
 
 		// 콤보 박스 크기 설정
 		comboBox.setPreferredSize(new Dimension(200, 30));
@@ -645,7 +842,32 @@ public class Snack extends JFrame implements ActionListener {
 		button_sn2.addActionListener(this);
 		button_sn3.addActionListener(this);
 		button_sn4.addActionListener(this);
+		button_pay.addActionListener(this);
+		b_logout.addActionListener(this);
+		b_WGV.addActionListener(this);
+		// 커서 변경 -> 마우스로
+		JButton[] allButtons = { b_logout, b_mywgv, b_custom, b_tabmoive, b_tabmoiveRe, b_tabFood, b_WGV, button_pay,
+				button_sn4, button_sn3, button_sn2, button_sn1, button_sn4, button_dk6, button_dk5, button_dk4,
+				button_dk3, button_dk2, button_dk1, button_pc6, button_pc5, button_pc4, button_pc3, button_pc2,
+				button_pc1, button_cm6, button_cm5, button_cm4, button_cm3, button_cm2, button_cm1 };
 
+		for (JButton allButton : allButtons) {
+			// 마우스가 올라갔을 떄 커서 변경
+			allButton.addActionListener(this);
+			allButton.addMouseListener(new MouseAdapter() {
+				final JButton button = allButton;
+
+				public void mouseEntered(MouseEvent e) {
+					button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				}
+
+				// 마우스가 화면 벗어날떄 커서 원상 복귀
+				@Override
+				public void mouseExited(MouseEvent e) {
+					button.setCursor(Cursor.getDefaultCursor());
+				}
+			});
+		}
 	}
 
 	@Override
@@ -694,15 +916,81 @@ public class Snack extends JFrame implements ActionListener {
 			choose21();
 		} else if (e.getSource() == button_sn4) {
 			choose22();
+		} else if (e.getSource() == button_pay) {
+			choose23();
+			dispose();
+			new MainPageFrame();
+		} else if (e.getSource() == b_WGV) {
+			dispose();
+			new MainPageFrame();
+		} else if (e.getSource() == b_logout) {
+			MainPageFrame.showWarning = true;
+			new MainPageFrame();
+			setVisible(false);
+		} else if (e.getSource() == b_WGV) {
+			new MainPageFrame();
+			setVisible(false);
+
+		} else if (e.getSource() == b_mywgv) {
+			new Reservaion_Con();
+			setVisible(false);
+
+		} else if (e.getSource() == b_tabmoive) {
+			new Movie();
+			setVisible(false);
+		} else if (e.getSource() == b_tabmoiveRe) {
+			new ReservationFrame();
+			setVisible(false);
+		} else if (e.getSource() == b_tabFood) {
+			new Snack();
+			setVisible(false);
 		}
+
 	}
 
 	// DAO 호출
 	SnackDAO dao = new SnackDAO();
+	SnackDTO dto = new SnackDTO();
+	SnackBackDAO Bagdao = new SnackBackDAO();
+	SnackBackDTO Bagdto;
 
-	// 이미지 클릭 후 sql 연동
-	private void choose1() { // 더블콤보
-		// 현재 재고 수량 확인
+	// 리셋 => 주문번호 +1씩 증가 (화면 킬떄마다)
+	int num = Bagdao.snackbagNum() + 1;
+
+	private void choose23() {
+
+		int result = 0;
+
+		if (result == JOptionPane.YES_OPTION) {
+			List<SnackBackDTO> list = Bagdao.snackbagTOT(num);
+
+			String foodresult = "";
+			int totprice = 0;
+
+			for (int i = 0; i < list.size(); i++) {
+				Bagdto = list.get(i);
+				if (Bagdto.amount >= 0) {
+					foodresult += Bagdto.toString() + "\n";
+					totprice += Bagdto.getPricetot();
+					button_pay.setEnabled(true);
+
+				} else if (Bagdto.getFoodname().equals("")) {
+					button_pay.setEnabled(false);
+				}
+			}
+			JOptionPane.showMessageDialog(this, "결제가 완료되었습니다.\n" + foodresult + "\n총 가격 : " + totprice + "원", "결제 완료",
+					JOptionPane.INFORMATION_MESSAGE);
+			num++;
+
+		} else {
+			// 사용자가 결제를 취소한 경우
+			JOptionPane.showMessageDialog(this, "결제가 취소되었습니다.", "결제 취소", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+
+	// 더블콤보 선택
+	private void choose1() {
+		// 수량 선택 다이얼로그 표시
 		int amount = dao.selectArticle("더블콤보");
 		String message = "현재 재고: " + amount + "개\n수량을 선택해주세요?";
 
@@ -717,7 +1005,25 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("더블콤보", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "더블콤보 " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 13000; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("더블콤보"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "더블콤보는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -744,7 +1050,26 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("라지콤보", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "라지콤보 " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 15000; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("라지콤보"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
+
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "라지콤보는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -771,7 +1096,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("스몰세트", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "스몰세트 " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 7000; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("스몰세트"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "스몰세트는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -797,8 +1139,26 @@ public class Snack extends JFrame implements ActionListener {
 
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
-				// 업데이트하고 업데이트 결과를 받아옴
+				// 업데이트하고 업데이트 결과를
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("CGV콤보", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "CGV콤보 " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 10000; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("CGV콤보"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "CGV콤보는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -825,7 +1185,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("우리 패키지", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "우리 패키지 " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 61000; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("우리 패키지"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "우리 패키지는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -852,7 +1229,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("나랑 너 패키지", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "나랑 너 패키지 " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 34000; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("나랑 너 패키지"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "나랑 너 패키지는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -879,7 +1273,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("더블치즈팝콘M", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "더블치즈팝콘M " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 6000; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("더블치즈팝콘M"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "더블치즈팝콘M는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -906,7 +1317,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("바질어니언팝콘M", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "바질어니언팝콘M " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 6000; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("바질어니언팝콘M"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "바질어니언팝콘M는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -933,7 +1361,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("달콤팝콘M", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "달콤팝콘M " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 6000; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("달콤팝콘M"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "달콤팝콘M는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -960,7 +1405,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("더블치즈팝콘L", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "더블치즈팝콘L " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 6500; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("더블치즈팝콘L"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "더블치즈팝콘L는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -987,7 +1449,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("바질어니언팝콘L", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "바질어니언팝콘L " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 6500; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("바질어니언팝콘L"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "바질어니언팝콘L는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -1014,7 +1493,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("달콤팝콘L", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "달콤팝콘L " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 6500; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("달콤팝콘L"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "달콤팝콘L는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -1041,7 +1537,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("핑크레몬에이드", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "핑크레몬에이드 " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 5500; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("핑크레몬에이드"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "핑크레몬에이드는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -1068,7 +1581,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("에이드", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "에이드 " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 5500; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("에이드"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "에이드는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -1095,7 +1625,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("아메리카노ICE", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "아메리카노ICE " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 4500; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("아메리카노ICE"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "아메리카노ICE는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -1122,7 +1669,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("아메리카노HOT", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "아메리카노HOT " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 4000; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("아메리카노HOT"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "아메리카노HOT는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -1149,7 +1713,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("탄산음료L", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "탄산음료L " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 3500; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("탄산음료L"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "탄산음료L는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -1176,7 +1757,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("탄산음료M", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "탄산음료M " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 3000; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("탄산음료M"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "탄산음료M는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -1203,7 +1801,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("칠리치즈나쵸", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "칠리치즈나쵸 " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 4900; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("칠리치즈나쵸"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "칠리치즈나쵸는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -1230,7 +1845,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("플레인핫도그", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "플레인핫도그 " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 4500; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("플레인핫도그"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "플레인핫도그는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -1257,7 +1889,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("칠리치즈핫도그", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "칠리치즈핫도그 " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 5000; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("칠리치즈핫도그"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "칠리치즈핫도그는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);
@@ -1284,7 +1933,24 @@ public class Snack extends JFrame implements ActionListener {
 			// 음식이 품절되었는지 확인
 			if (amount >= 0 && amount >= quantity) {
 				// 업데이트하고 업데이트 결과를 받아옴
+				button_pay.setEnabled(true);
 				int count = dao.updatesnack("맛밤", quantity); // 선택한 수량만큼 차감
+				JOptionPane.showMessageDialog(this, "맛밤 " + quantity + "개 를 장바구니에 담았습니다", "장바구니",
+						JOptionPane.INFORMATION_MESSAGE);
+				/** 장바구니에 담기 => 각각 품목에 넣어주기 */
+				Bagdto = new SnackBackDTO();
+
+				int price = 3500; // -> 1개 가격
+				int totalPrice = price * quantity;
+				Bagdto.setNum(num);
+				Bagdto.setFoodname("맛밤"); // -> 이름
+				Bagdto.setPrice(price);
+				Bagdto.setAmount(quantity);
+				Bagdto.setPricetot(totalPrice);
+				Bagdto.setId(idFrame.getUsername());
+
+				Bagdao.snackbag(Bagdto);
+				/** 여기까지 */
 				// 수량이 0 이하일 때
 				if (count <= 0) {
 					JOptionPane.showMessageDialog(this, "맛밤는 품절되었습니다.", "품절", JOptionPane.INFORMATION_MESSAGE);

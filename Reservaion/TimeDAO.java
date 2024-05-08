@@ -96,9 +96,8 @@ public class TimeDAO {
 			rs = pstmt.executeQuery();
 			while(rs.next()){
 
-				String time = rs.getString("time")+"   ";
-				String time1  = rs.getString("count")+"석";
-				list.add(time+"\n"+time1);
+				String time = rs.getString("time");
+				list.add(time);
 
 			}
 			
@@ -119,11 +118,10 @@ public class TimeDAO {
 		return list.toArray(new String[0]);
 	}
 	
-	// 좌석 수만 나열 
-		public String[] asc(int num) {
-			List<String> list = new ArrayList<String>();
-
-			String sql = "select * from room where roomnum = ? order by roomnum,num asc";
+	// 좌석 가져오기
+		public int getcount(int room,int num) {
+			int count=0;
+			String sql = "select * from room where roomnum = ? and num = ?";
 
 			Connection conn = getConnection();
 			PreparedStatement pstmt = null;
@@ -131,13 +129,12 @@ public class TimeDAO {
 
 			try {
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, num);
+				pstmt.setInt(1, room);
+				pstmt.setInt(2, num);
 				rs = pstmt.executeQuery();
 				while(rs.next()){
-
-					String time1  = rs.getString("count")+"석";
-					list.add(time1);
-
+				 count = rs.getInt("count");
+			
 				}
 				
 			} catch (SQLException e) {
@@ -154,7 +151,7 @@ public class TimeDAO {
 					e.printStackTrace();
 				}
 			}
-			return list.toArray(new String[0]);
+			return count;
 		}
 		
 	

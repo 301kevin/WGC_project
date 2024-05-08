@@ -45,7 +45,7 @@ public class SeatDAO {
 
 	// 각 정보 저장해두기 
 	public int imfosave(SeatDTO seatdto) {
-		String sql = "insert into tot (image,mvname,cal,time,room,count) values(?,?,?,?,?,?)";
+		String sql = "insert into reservation values (?, ?, ?, ?, ?, ?,?,?)";
 		Connection conn = getConnection();
 		PreparedStatement pstmt = null;
 		int result =0 ;
@@ -56,7 +56,9 @@ public class SeatDAO {
 			pstmt.setString(3, seatdto.getCal());
 			pstmt.setString(4, seatdto.getTime());
 			pstmt.setString(5, seatdto.getRoom());
-			pstmt.setInt(6, seatdto.getCount());
+			pstmt.setString(6, seatdto.getCount());
+			pstmt.setString(7, seatdto.getSeatnum());
+			pstmt.setString(8, seatdto.getId());
 
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {

@@ -1,4 +1,4 @@
-package Move;
+package Movie;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
